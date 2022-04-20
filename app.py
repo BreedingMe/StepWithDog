@@ -1,3 +1,5 @@
+from api import post_post
+
 from conf import mongo
 
 from flask import Flask, render_template
@@ -8,6 +10,8 @@ mongo_client = MongoClient('mongodb://' + mongo.config['host'] + '/' + mongo.con
 
 app = Flask(__name__)
 app.db = mongo_client.stepwithdog
+
+app.register_blueprint(post_post.bp)
 
 
 @app.route('/index')
