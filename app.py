@@ -4,7 +4,7 @@ from flask import Flask, render_template
 
 from pymongo import MongoClient
 
-mongo_client = MongoClient('mongodb://' + mongo.config['host'], mongo.config['port'])
+mongo_client = MongoClient('mongodb://' + mongo.config['host'] + '/' + mongo.config['db'], mongo.config['port'])
 
 app = Flask(__name__)
 app.db = mongo_client.stepwithdog
