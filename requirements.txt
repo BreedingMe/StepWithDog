@@ -1,4 +1,5 @@
 Flask
 beautifulsoup4
+opencv-python
 pymongo
 requests
