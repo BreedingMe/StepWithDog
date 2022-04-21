@@ -12,6 +12,7 @@ db = mongo_client.stepwithdog
 
 url = 'https://animal.seoul.go.kr/animalplay'
 
+
 # 해당 url 크롤링
 def insert_recommend(url):
     # 타겟 URL을 읽어서 HTML를 받아오고,
@@ -40,11 +41,12 @@ def insert_recommend(url):
         # 크롤링한 결과(딕셔너리)를 DB에 저장
         db.recommend.insert_one(doc)
 
+def delete_recommend():
+    db.recommend.delete_many({})
 
-# 크롤링 시작
+# 초기화 후, 크롤링 시작
+delete_recommend()
 insert_recommend(url)
-
-
 
 # 크롤링할 데이터
 # mapskip > table > tbody > tr:nth-child(1)
