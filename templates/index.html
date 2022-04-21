@@ -94,6 +94,44 @@
             width: 70%;
         }
 
+        {#추천 리스트 관련 css 시작#}
+        .card-columns {
+            margin: auto;
+            width: 70%;
+        }
+
+        .recommend-columns {
+            margin: auto;
+            width: 70%;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-body {
+            display: flex;
+        }
+
+        .name, .address, .tel{
+            flex: none;
+        }
+
+        .name {
+            margin-right: auto;
+            padding-left: 40px;
+        }
+
+        .address {
+            margin: 0 auto;
+        }
+
+        .tel {
+            margin-left: auto;
+            padding-right: 40px;
+        }
+        {#추천 리스트 관련 css 끝#}
+
         .scroll-bar {
             -ms-overflow-style: none;
         }
@@ -103,6 +141,31 @@
         }
 
     </style>
+
+    <script>
+        $(document).ready(function () {
+            // '게시글'누르면 게시글 목록 보이게 하기
+            $('#post').on('click', function () {
+                    $('#post').addClass('active');
+                    $('#recommend').removeClass('active');
+                    $('#post-area').show();
+                    $('#recommend-area').hide();
+                })
+            // '추천'을 누르면 추천 리스트 목록 보이게 하기
+            $('#recommend').on('click', function () {
+                $('#post').removeClass('active');
+                $('#recommend').addClass('active');
+                $('#post-area').hide();
+                $('#recommend-area').show();
+            })
+            // 처음 로딩 시, 게시글 목록을 보이게 한다
+            $('#post-area').show();
+            $('#recommend-area').hide();
+        })
+
+
+    </script>
+
 </head>
 <body>
     <div>
@@ -112,15 +175,15 @@
         </div>
         <div>
             <div class="buttons">
-                <button class="button button1">게시글</button>
-                <button class="button button1">추천</button>
+                <button class="button button1" id="post">게시글</button>
+                <button class="button button1" id="recommend">추천</button>
                 <div class="float-right">
                     <button class="button button2">글쓰기</button>
                 </div>
             </div>
         </div>
         <div style="overflow-y:auto; overflow-x:hidden; width:100%; height:1000px;" class="scroll-bar">
-            <div class="card-columns">
+            <div id="post-area" class="card-columns">
                 <div class="card">
                     <div class=embed-responsive-4by3">
                         <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
@@ -240,6 +303,15 @@
                         <h5 class="card-title">TITLE</h5>
                         <p class="card-text mt-3">DESC</p>
                     </div>
+                </div>
+            </div>
+            <div id="recommend-area" class="recommend-columns">
+                <div class="card">
+                  <div class="card-body">
+                      <div class="name">어린이대공원</div>
+                      <div class="address">광진구 능동로 216(구의문주차장 옆)</div>
+                      <div class="tel">02-2124-2835</div>
+                  </div>
                 </div>
             </div>
         </div>
