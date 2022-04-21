@@ -1,6 +1,6 @@
 from flask import Blueprint, current_app, jsonify, request
 
-bp = Blueprint('get', __name__, url_prefix='/')
+bp = Blueprint('recommend-list', __name__, url_prefix='/')
 
 
 # /recommend-list로 요청이 들어오면 DB에서 recommend의 데이터를 가져와 클라이언트로 보내줌
