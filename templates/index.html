@@ -41,7 +41,7 @@
 
         .float-right {
             position: absolute;
-            right: calc(15% + 30px);
+            right: 15%;
         }
 
         .button {
@@ -94,6 +94,45 @@
             width: 70%;
         }
 
+        {#추천 리스트 관련 css 시작#}
+        .card-columns {
+            margin: auto;
+            width: 70%;
+        }
+
+        .recommend-columns {
+            margin: auto;
+            width: 70%;
+        }
+
+        .card {
+            margin-bottom: 30px;
+        }
+
+        .card-body {
+            display: flex;
+        }
+
+        .name, .address, .tel {
+            flex: none;
+        }
+
+        .name {
+            margin-right: auto;
+            padding-left: 40px;
+        }
+
+        .address {
+            margin: 0 auto;
+        }
+
+        .tel {
+            margin-left: auto;
+            padding-right: 40px;
+        }
+
+        {#추천 리스트 관련 css 끝#}
+
         .scroll-bar {
             -ms-overflow-style: none;
         }
@@ -102,147 +141,154 @@
             display: none;
         }
 
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     </style>
+
+    <script>
+        $(document).ready(function () {
+            // '게시글'누르면 게시글 목록 보이게 하기
+            $('#post').on('click', function () {
+                $('#post').addClass('active');
+                $('#recommend').removeClass('active');
+                $('#post-area').show();
+                $('#recommend-area').hide();
+            })
+            // '추천'을 누르면 추천 리스트 목록 보이게 하기
+            $('#recommend').on('click', function () {
+                $('#post').removeClass('active');
+                $('#recommend').addClass('active');
+                $('#post-area').hide();
+                $('#recommend-area').show();
+            })
+            // 처음 로딩 시, 게시글 목록을 보이게 한다
+            $('#post-area').show();
+            $('#recommend-area').hide();
+
+
+        })
+
+        // 크롤링한 추천 리스트를 불러온다.
+        function getRecommendList() {
+            // 크롤링한 데이터를 붙여넣기 전에 초기화
+            $('#recommend-area').empty()
+
+            // 1. 서버에 크롤링한 추천 리스트를 요청한다
+            $.ajax({
+                type: "GET",
+                url: "/recommend-list",
+                data: {},
+                success: function (response) {
+                    // 2. 받은 데이터를 가공한다.
+                    let list = response['recommend_list']
+                    for (let i = 0; i < list.length; i++) {
+                        let park_name = list[i]['park_name']
+                        let park_address = list[i]['park_address']
+                        let park_tel = list[i]['park_tel']
+
+                        // 3. HTML로 만든다
+                        let temp_html = `<div class="card">
+                                            <div class="card-body">
+                                                <div class="name">${park_name}</div>
+                                                <div class="address">${park_address}</div>
+                                                <div class="tel">${park_tel}</div>
+                                            </div>
+                                        </div>`
+
+                        // 4. 붙여넣기
+                        $('#recommend-area').append(temp_html)
+
+                    }
+                }
+            })
+
+        }
+        function openpost() {
+            $('#myModal').show();
+        }
+        function closepost() {
+            $('#myModal').hide();
+        }
+    </script>
+
 </head>
 <body>
+<div>
+    <div class="stepwithdog">
+        <h1>STEP WITH DOG</h1>
+        <p>강아지와 함께하는 공간을 소개합니다.</p>
+    </div>
     <div>
-        <div class="stepwithdog">
-            <h1>STEP WITH DOG</h1>
-            <p>강아지와 함께하는 공간을 소개합니다.</p>
+        <div class="buttons">
+            <button class="button button1" id="post">게시글</button>
+            <button class="button button1" id="recommend" onclick="getRecommendList()">추천</button>
+            <div class="float-right">
+                <button class="button button2">글쓰기</button>
+            </div>
         </div>
-        <div>
-            <div class="buttons">
-                <button class="button button1">게시글</button>
-                <button class="button button1">추천</button>
-                <div class="float-right">
-                    <button class="button button2">글쓰기</button>
+    </div>
+    <div style="overflow-y:auto; overflow-x:hidden; width:100%; height:1000px;" class="scroll-bar">
+        <div id="post-area" class="card-columns">
+            <div class="card" onclick="openpost()">
+                <div class=embed-responsive-4by3">
+                    <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
+                         class="card-img-top embed-responsive-item" alt="tree">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">TITLE</h5>
+                    <p class="card-text mt-3">DESC</p>
                 </div>
             </div>
         </div>
-        <div style="overflow-y:auto; overflow-x:hidden; width:100%; height:1000px;" class="scroll-bar">
-            <div class="card-columns">
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class=embed-responsive-4by3">
-                        <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                             class="card-img-top embed-responsive-item" alt="tree">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">TITLE</h5>
-                        <p class="card-text mt-3">DESC</p>
-                    </div>
+        <div id="recommend-area" class="recommend-columns">
+            <div class="card">
+                <div class="card-body">
+                    <div class="name">어린이대공원</div>
+                    <div class="address">광진구 능동로 216(구의문주차장 옆)</div>
+                    <div class="tel">02-2124-2835</div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<!-- 게시글 팝업창 뼈대 -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title"> Title </h2>
+                <button type="button" class="close" onclick="closepost()">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <!-- 게시글 팝업 내부 사진  -->
+                <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
+                     alt="Paris" style="width:75%; margin:auto auto 5% auto ">
+                <hr>
+                <!-- 게시글 팝업 내부 사진 완료 -->
+
+                <!-- 게시글 팝업 내부 content -->
+                <div>
+                    이번 봄에 다녀온 영국입니다~!
+                    빅벤 공사도 끝나고 아주 멋진 곳이예요.
+                    강아지와 산책하면 너무너무 좋을 것 같네요~~
+                    추천드려요 ^^
+                </div>
+                <hr>
+                <p> address : 서울시 송파구 잠실동 </p>
+                <!-- 게시글 팝업 내부 content 완료-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 게시글 팝업창 뼈대 끝 -->
 </body>
 </html>
