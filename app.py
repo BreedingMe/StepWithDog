@@ -1,4 +1,4 @@
-from api import post_post, post_get, recommend_list
+from api import post_post, post_get, recommend_list, list_get
 
 from conf import mongo
 
@@ -14,6 +14,7 @@ app.db = mongo_client.stepwithdog
 app.register_blueprint(post_post.bp)
 app.register_blueprint(recommend_list.bp)
 app.register_blueprint(post_get.bp)
+app.register_blueprint(list_get.bp)
 
 
 @app.route('/')
