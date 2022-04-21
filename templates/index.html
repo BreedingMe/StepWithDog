@@ -146,7 +146,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
     </style>
 
     <script>
@@ -168,6 +167,7 @@
             // 처음 로딩 시, 게시글 목록을 보이게 한다
             $('#post-area').show();
             $('#recommend-area').hide();
+            allpost()
 
 
         })
@@ -207,11 +207,43 @@
             })
 
         }
+
         function openpost() {
             $('#myModal').show();
         }
+
         function closepost() {
             $('#myModal').hide();
+        }
+
+        function allpost() {
+            $('#post-area').empty()
+            $.ajax({
+                type: "GET",
+                url: "/post-list",
+                data: {},
+                success: function (response) {
+                    let post_list = response['all_list']
+                    for (let i = 0; i < post_list.length; i++) {
+                        let title = post_list[i]['title']
+                        let thumbnail = post_list[i]['thumbnail']
+                        let id = post_list[i]['_id']
+
+                        let temp_html = `<div class="col-sm-4" data-id="${id}" id="post-${i}">
+                                            <div class="card" onclick="openpost()">
+                                                <div class=embed-responsive-4by3">
+                                                    <img src="${thumbnail}"
+                                                         class="card-img-top embed-responsive-item" alt="tree">
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${title}</h5>
+                                                </div>
+                                            </div>
+                                        </div>`
+                        $('#post-area').append(temp_html)
+                    }
+                }
+            })
         }
     </script>
 
@@ -232,17 +264,7 @@
         </div>
     </div>
     <div style="overflow-y:auto; overflow-x:hidden; width:100%; height:1000px;" class="scroll-bar">
-        <div id="post-area" class="card-columns">
-            <div class="card" onclick="openpost()">
-                <div class=embed-responsive-4by3">
-                    <img src="https://www.motoya.co.kr/news/photo/old/data/old_img/1708/b4237eff71568cc9593c519150371a36_bvtWxXdnU7jO1Uos79qbpm.jpg"
-                         class="card-img-top embed-responsive-item" alt="tree">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">TITLE</h5>
-                    <p class="card-text mt-3">DESC</p>
-                </div>
-            </div>
+        <div class="row" id="post-area">
         </div>
         <div id="recommend-area" class="recommend-columns">
             <div class="card">
