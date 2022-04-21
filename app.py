@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.db = mongo_client.stepwithdog
 
 
-@app.route('/index')
+@app.route('/')
 def index():
     return render_template('index.html')
 
