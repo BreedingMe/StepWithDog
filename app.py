@@ -1,4 +1,4 @@
-from api import post_post
+from api import post_post, recommend_list
 
 from conf import mongo
 
@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.db = mongo_client.stepwithdog
 
 app.register_blueprint(post_post.bp)
+app.register_blueprint(recommend_list.bp)
 
 
 @app.route('/index')
