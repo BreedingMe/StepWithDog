@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>스위독 - Step With Dog</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+
+    <script type=text/javascript src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+<!-- 타이틀 영역 -->
+<div class="title">
+    <h1>STEP WITH DOG</h1>
+    <p>강아지와 함께하는 공간을 소개합니다.</p>
+</div>
+
+<!-- 버튼 영역 -->
+<div>
+    <div class="button-container">
+        <button id="post-list-button" class="button list-button" onclick="openPostCardList()">게시글</button>
+        <button id="recommend-list-button" class="button list-button" onclick="openRecommendCardList()">추천</button>
+
+        <div class="button-right-align-wrapper">
+            <button class="button posting-button" onclick="openPostUploadPopup()">글쓰기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 카드 목록 영역 -->
+<div>
+    <div id="post-list-wrapper" class="row list-wrapper"></div>
+    <div id="recommend-list-wrapper" class="list-wrapper"></div>
+</div>
+
+<!-- 게시글 팝업 영역 -->
+<div id="post-popup" class="modal">
+    <div class="modal-dialog">
+        <div id="post-popup-content" class="modal-content"></div>
+    </div>
+</div>
+
+<!-- 게시글 업로드 팝업 영역 -->
+<div id="post-upload-popup" class="modal">
+    <div class="modal-dialog">
+        <div id="post-popup-content" class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">글쓰기</h2>
+                <button type="button" class="close" onclick="closePostUploadPopup()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span id="title-label" class="input-group-text">제목</span>
+                    </div>
+
+                    <input type="text" id="title-input" class="form-control" aria-describedby="title-label"/>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span id="address-label" class="input-group-text">주소</span>
+                    </div>
+
+                    <input type="text" id="address-input" class="form-control" aria-describedby="address-label"/>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">사진</span>
+                    </div>
+
+                    <div class="custom-file">
+                        <input type="file" accept="image/*" id="image-file" class="custom-file-input"
+                               onchange="changeImageFile()"/>
+                        <label for="image-file" id="custom-file-label" class="custom-file-label"></label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">내용</span>
+                    </div>
+
+                    <textarea id="content-input" class="form-control popup-textarea"></textarea>
+                </div>
+
+                <button type="button" class="btn btn-secondary popup-left-align-button" onclick="uploadPost()">글쓰기
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
