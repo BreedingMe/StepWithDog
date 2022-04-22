@@ -12,6 +12,9 @@ function openPostCardList() {
     $('#post-list-button').addClass('active');
     $('#recommend-list-button').removeClass('active');
 
+    // 글쓰기 버튼 보이기
+    $('#post-upload-button').show();
+
     // 카드 목록 전환
     $('#post-list-wrapper').show();
     $('#recommend-list-wrapper').hide();
@@ -24,6 +27,9 @@ function openRecommendCardList() {
     // 카드 목록 전환 버튼 CSS 변경
     $('#post-list-button').removeClass('active');
     $('#recommend-list-button').addClass('active');
+
+    // 글쓰기 버튼 숨기기
+    $('#post-upload-button').hide();
 
     // 카드 목록 전환
     $('#post-list-wrapper').hide();
