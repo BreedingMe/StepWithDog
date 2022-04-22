@@ -146,6 +146,12 @@
             margin-left: auto;
             margin-right: auto;
         }
+
+        .custom-file-input ~ .custom-file-label::after {
+            content: "열기";
+            background-color: white;
+            color: gray;
+        }
     </style>
 
     <script>
@@ -284,6 +290,61 @@
                 }
             })
         }
+
+        function openPostUpload() {
+            $('#postuploadmodal').show()
+        }
+
+        function closePostUpload() {
+            $('#postuploadmodal').hide()
+        }
+
+        function writePost() {
+            let title = $('#title-box').val()
+            let address = $('#address-box').val()
+            let image = $('#image-file')[0].files[0]
+            let content = $('#content-box').val()
+
+            if (title == '') {
+                alert('제목을 입력해주세요.')
+            }
+            else if (address == '') {
+                alert('주소를 입력해주세요.')
+            }
+            else if (image == undefined) {
+                alert('이미지를 선택해주세요.')
+            }
+            else if (content == '') {
+                alert('내용을 입력해주세요.');
+            }
+            else {
+                let formData = new FormData();
+
+                formData.append('title', title)
+                formData.append('address', address)
+                formData.append('image', image)
+                formData.append('content', content)
+
+                $.ajax({
+                    type: "POST",
+                    url: "/post",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        window.location.reload()
+                    },
+                    error: function () {
+                        alert('에러가 발생했습니다.')
+                    }
+                })
+            }
+        }
+
+        function uploadImage() {
+            $('#file-label').text($('#image-file')[0].files[0].name)
+        }
     </script>
 
 </head>
@@ -298,7 +359,7 @@
             <button class="button button1" id="post">게시글</button>
             <button class="button button1" id="recommend" onclick="getRecommendList()">추천</button>
             <div class="float-right">
-                <button class="button button2">글쓰기</button>
+                <button class="button button2" onclick="openPostUpload()">글쓰기</button>
             </div>
         </div>
     </div>
@@ -326,5 +387,55 @@
     </div>
 </div>
 <!-- 게시글 팝업창 뼈대 끝 -->
+
+<div class="modal" id="postuploadmodal">
+    <div class="modal-dialog">
+
+        <div class="modal-content" id="postuploadmodalcontent">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title">글쓰기</h2>
+                <button type="button" class="close" onclick="closePostUpload()">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="title-addon">제목</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="title-addon" id="title-box">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="address-addon">주소</span>
+                    </div>
+                    <input type="text" class="form-control" aria-describedby="address-addon" id="address-box">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">사진</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" accept="image/*" class="custom-file-input" id="image-file" onchange="uploadImage()">
+                        <label class="custom-file-label" for="image-file" id="file-label"></label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">내용</span>
+                    </div>
+                    <textarea class="form-control" style="height: 200px" id="content-box"></textarea>
+                </div>
+
+                <button type="button" class="btn btn-secondary" style="margin-top: 1rem; float: right" onclick="writePost()">글쓰기</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
