@@ -21,7 +21,7 @@
 
 .button-right-align-wrapper {
     position: absolute;
-    right: 15%;
+    right: calc(15% + 15px);
 }
 
 .button {
