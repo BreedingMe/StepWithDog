@@ -1,62 +1,51 @@
-# 크롤링
-
-import requests
 from bs4 import BeautifulSoup
 
-from pymongo import MongoClient  # pymongo를 임포트 하기(패키지 인스톨 먼저 해야겠죠?)
 from conf import mongo
 
-# Step with Dog의 DB
+from pymongo import MongoClient
+
+import requests
+
+# MongoDB 연결
 mongo_client = MongoClient('mongodb://' + mongo.config['host'] + '/' + mongo.config['db'], mongo.config['port'])
 db = mongo_client.stepwithdog
 
-url = 'https://animal.seoul.go.kr/animalplay'
 
-
-# 해당 url 크롤링
-def insert_recommend(url):
-    # 타겟 URL을 읽어서 HTML를 받아오고,
+def insert_recommend_list(url):
+    # HTTP 헤더 설정
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'
+    }
+
+    # HTML 데이터 획득
     data = requests.get(url, headers=headers, verify=False)
 
-    # HTML을 BeautifulSoup이라는 라이브러리를 활용해 검색하기 용이한 상태로 만듦
-    # soup이라는 변수에 "파싱 용이해진 html"이 담긴 상태가 됨
+    # HTML 데이터 파싱
     soup = BeautifulSoup(data.text, 'html.parser')
 
-    trs = soup.select('#mapskip > table > tbody > tr')
+    # 파싱한 데이터 분석
+    parks = soup.select('#mapskip > table > tbody > tr')
 
-    for tr in trs:
-        park_name = tr.select_one('td.title').text.strip()
-        park_address = tr.select_one('td:nth-child(3)').text
-        park_tel = tr.select_one('td:nth-child(5)').text
+    for park in parks:
+        park_name = park.select_one('td.title').text.strip()
+        park_address = park.select_one('td:nth-child(3)').text
+        park_tel = park.select_one('td:nth-child(5)').text
 
-        # 크롤링한 결과를 딕셔너리로 만듦
         doc = {
             'park_name': park_name,
             'park_address': park_address,
             'park_tel': park_tel
         }
 
-        # 크롤링한 결과(딕셔너리)를 DB에 저장
+        # 데이터베이스에 공원 정보 삽입
         db.recommend.insert_one(doc)
 
-def delete_recommend():
+
+def delete_recommend_list():
+    # 데이터베이스 초기화
     db.recommend.delete_many({})
 
-# 초기화 후, 크롤링 시작
-delete_recommend()
-insert_recommend(url)
 
-# 크롤링할 데이터
-# mapskip > table > tbody > tr:nth-child(1)
-# mapskip > table > tbody > tr
-
-# 공원 이름
-# mapskip > table > tbody > tr:nth-child(1) > td.title
-
-# 주소
-# mapskip > table > tbody > tr:nth-child(1) > td:nth-child(3)
-
-# 전화번호
-# mapskip > table > tbody > tr:nth-child(1) > td:nth-child(5)
+if __name__ == '__main__':
+    delete_recommend_list()
+    insert_recommend_list('https://animal.seoul.go.kr/animalplay')
