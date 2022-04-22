@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -18,410 +20,77 @@
 
     <title>스위독 - Step With Dog</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
 
-    <style>
-        * {
-            font-family: 'Song Myung', serif;
-        }
-
-        .stepwithdog {
-            text-align: center;
-            margin: 10% auto 10% auto;
-        }
-
-        .buttons {
-            margin: 0% auto 2% auto;
-            width: 65%;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .float-right {
-            position: absolute;
-            right: 15%;
-        }
-
-        .button {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 7px 18px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 17px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            border-radius: 40px;
-        }
-
-        .button1 {
-            background-color: white;
-            color: dimgrey;
-            border: 2px solid #e7e7e7;
-        }
-
-        .button1:hover {
-            background-color: #e7e7e7;
-        }
-
-        .button2 {
-            background-color: #FAECC5;
-            color: dimgrey;
-            border: 2px solid #FAECC5;
-        }
-
-        .button2:hover {
-            background-color: #FFFFD7;
-            color: dimgrey;
-        }
-
-        .card {
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .row {
-            margin: auto;
-            width: 70%;
-        }
-
-        {#추천 리스트 관련 css 시작#}
-        .row {
-            margin: auto;
-            width: 70%;
-        }
-
-        .recommend-columns {
-            margin: auto;
-            width: 70%;
-        }
-
-        .card {
-            margin-bottom: 30px;
-        }
-
-        .card-body {
-            display: flex;
-        }
-
-        .name, .address, .tel {
-            flex: none;
-        }
-
-        .name {
-            margin-right: auto;
-            padding-left: 40px;
-        }
-
-        .address {
-            margin: 0 auto;
-        }
-
-        .tel {
-            margin-left: auto;
-            padding-right: 40px;
-        }
-
-        {#추천 리스트 관련 css 끝#}
-
-        .scroll-bar {
-            -ms-overflow-style: none;
-        }
-
-        .scroll-bar::-webkit-scrollbar {
-            display: none;
-        }
-
-        img {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .custom-file-input ~ .custom-file-label::after {
-            content: "열기";
-            background-color: white;
-            color: gray;
-        }
-    </style>
-
-    <script>
-        $(document).ready(function () {
-            // '게시글'누르면 게시글 목록 보이게 하기
-            $('#post').on('click', function () {
-                $('#post').addClass('active');
-                $('#recommend').removeClass('active');
-                $('#post-area').show();
-                $('#recommend-area').hide();
-            })
-            // '추천'을 누르면 추천 리스트 목록 보이게 하기
-            $('#recommend').on('click', function () {
-                $('#post').removeClass('active');
-                $('#recommend').addClass('active');
-                $('#post-area').hide();
-                $('#recommend-area').show();
-            })
-            // 처음 로딩 시, 게시글 목록을 보이게 한다
-            $('#post-area').show();
-            $('#recommend-area').hide();
-            allpost()
-
-
-        })
-
-        // 크롤링한 추천 리스트를 불러온다.
-        function getRecommendList() {
-            // 크롤링한 데이터를 붙여넣기 전에 초기화
-            $('#recommend-area').empty()
-
-            // 1. 서버에 크롤링한 추천 리스트를 요청한다
-            $.ajax({
-                type: "GET",
-                url: "/recommend-list",
-                data: {},
-                success: function (response) {
-                    // 2. 받은 데이터를 가공한다.
-                    let list = response['recommend_list']
-                    for (let i = 0; i < list.length; i++) {
-                        let park_name = list[i]['park_name']
-                        let park_address = list[i]['park_address']
-                        let park_tel = list[i]['park_tel']
-
-                        // 3. HTML로 만든다
-                        let temp_html = `<div class="card">
-                                            <div class="card-body">
-                                                <div class="name">${park_name}</div>
-                                                <div class="address">${park_address}</div>
-                                                <div class="tel">${park_tel}</div>
-                                            </div>
-                                        </div>`
-
-                        // 4. 붙여넣기
-                        $('#recommend-area').append(temp_html)
-
-                    }
-                }
-            })
-
-        }
-
-        function openpost(i) {
-            $('#myModal').show();
-            let id = $(`#post-${i}`).data('id');
-
-            $.ajax({
-                type: "GET",
-                url: `/post/${id}`,
-                data: {},
-                success: function (response) {
-                    let post = response['data']
-                    let title = post['title']
-                    let content = post['content']
-                    let address = post['address']
-                    let image = post['image']
-
-                    let temp_html = `<div class="modal-header">
-                <h2 class="modal-title">${title}</h2>
-                <button type="button" class="close" onclick="closepost()">×</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                <!-- 게시글 팝업 내부 사진  -->
-                <img src="${image}"
-                     style="width:75%; margin:auto auto 5% auto ">
-                <hr>
-                <!-- 게시글 팝업 내부 사진 완료 -->
-
-                <!-- 게시글 팝업 내부 content -->
-                <div>
-                    ${content}
-                </div>
-                <hr>
-                <p> address : ${address} </p>
-                <!-- 게시글 팝업 내부 content 완료-->
-            </div>`
-                    $('#postmodal').append(temp_html)
-                }
-
-            })
-        }
-
-        function closepost() {
-            $('#myModal').hide();
-            $('#postmodal').empty();
-        }
-
-        function allpost() {
-            $('#post-area').empty()
-            $.ajax({
-                type: "GET",
-                url: "/post-list",
-                data: {},
-                success: function (response) {
-                    let post_list = response['all_list']
-                    for (let i = 0; i < post_list.length; i++) {
-                        let title = post_list[i]['title']
-                        let thumbnail = post_list[i]['thumbnail']
-                        let id = post_list[i]['_id']
-
-                        let temp_html = `<div class="col-sm-4" data-id="${id}" id="post-${i}">
-                                            <div class="card" onclick="openpost(${i})">
-                                                <div class=embed-responsive-4by3">
-                                                    <img src="${thumbnail}"
-                                                         class="card-img-top embed-responsive-item" alt="tree">
-                                                </div>
-                                                <div class="card-body">
-                                                    <h5 class="card-title">${title}</h5>
-                                                </div>
-                                            </div>
-                                        </div>`
-                        $('#post-area').append(temp_html)
-                    }
-                }
-            })
-        }
-
-        function openPostUpload() {
-            $('#postuploadmodal').show()
-        }
-
-        function closePostUpload() {
-            $('#postuploadmodal').hide()
-        }
-
-        function writePost() {
-            let title = $('#title-box').val()
-            let address = $('#address-box').val()
-            let image = $('#image-file')[0].files[0]
-            let content = $('#content-box').val()
-
-            if (title == '') {
-                alert('제목을 입력해주세요.')
-            }
-            else if (address == '') {
-                alert('주소를 입력해주세요.')
-            }
-            else if (image == undefined) {
-                alert('이미지를 선택해주세요.')
-            }
-            else if (content == '') {
-                alert('내용을 입력해주세요.');
-            }
-            else {
-                let formData = new FormData();
-
-                formData.append('title', title)
-                formData.append('address', address)
-                formData.append('image', image)
-                formData.append('content', content)
-
-                $.ajax({
-                    type: "POST",
-                    url: "/post",
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        window.location.reload()
-                    },
-                    error: function () {
-                        alert('에러가 발생했습니다.')
-                    }
-                })
-            }
-        }
-
-        function uploadImage() {
-            $('#file-label').text($('#image-file')[0].files[0].name)
-        }
-    </script>
-
+    <script type=text/javascript src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 <body>
+<!-- 타이틀 영역 -->
+<div class="title">
+    <h1>STEP WITH DOG</h1>
+    <p>강아지와 함께하는 공간을 소개합니다.</p>
+</div>
+
+<!-- 버튼 영역 -->
 <div>
-    <div class="stepwithdog">
-        <h1>STEP WITH DOG</h1>
-        <p>강아지와 함께하는 공간을 소개합니다.</p>
-    </div>
-    <div>
-        <div class="buttons">
-            <button class="button button1" id="post">게시글</button>
-            <button class="button button1" id="recommend" onclick="getRecommendList()">추천</button>
-            <div class="float-right">
-                <button class="button button2" onclick="openPostUpload()">글쓰기</button>
-            </div>
-        </div>
-    </div>
-    <div style="overflow-y:auto; overflow-x:hidden; width:100%; height:1000px;" class="scroll-bar">
-        <div class="row" id="post-area">
-        </div>
-        <div id="recommend-area" class="recommend-columns">
-            <div class="card">
-                <div class="card-body">
-                    <div class="name">어린이대공원</div>
-                    <div class="address">광진구 능동로 216(구의문주차장 옆)</div>
-                    <div class="tel">02-2124-2835</div>
-                </div>
-            </div>
+    <div class="button-container">
+        <button id="post-list-button" class="button list-button" onclick="openPostCardList()">게시글</button>
+        <button id="recommend-list-button" class="button list-button" onclick="openRecommendCardList()">추천</button>
+
+        <div class="button-right-align-wrapper">
+            <button class="button posting-button" onclick="openPostUploadPopup()">글쓰기</button>
         </div>
     </div>
 </div>
-<!-- 게시글 팝업창 뼈대 -->
-<div class="modal" id="myModal">
+
+<!-- 카드 목록 영역 -->
+<div>
+    <div id="post-list-wrapper" class="row list-wrapper"></div>
+    <div id="recommend-list-wrapper" class="list-wrapper"></div>
+</div>
+
+<!-- 게시글 팝업 영역 -->
+<div id="post-popup" class="modal">
     <div class="modal-dialog">
-
-        <div class="modal-content" id="postmodal">
-
-        </div>
+        <div id="post-popup-content" class="modal-content"></div>
     </div>
 </div>
-<!-- 게시글 팝업창 뼈대 끝 -->
 
-<div class="modal" id="postuploadmodal">
+<!-- 게시글 업로드 팝업 영역 -->
+<div id="post-upload-popup" class="modal">
     <div class="modal-dialog">
-
-        <div class="modal-content" id="postuploadmodalcontent">
-
-            <!-- Modal Header -->
+        <div id="post-popup-content" class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">글쓰기</h2>
-                <button type="button" class="close" onclick="closePostUpload()">×</button>
+                <button type="button" class="close" onclick="closePostUploadPopup()">×</button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="title-addon">제목</span>
+                        <span id="title-label" class="input-group-text">제목</span>
                     </div>
-                    <input type="text" class="form-control" aria-describedby="title-addon" id="title-box">
+
+                    <input type="text" id="title-input" class="form-control" aria-describedby="title-label"/>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="address-addon">주소</span>
+                        <span id="address-label" class="input-group-text">주소</span>
                     </div>
-                    <input type="text" class="form-control" aria-describedby="address-addon" id="address-box">
+
+                    <input type="text" id="address-input" class="form-control" aria-describedby="address-label"/>
                 </div>
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text">사진</span>
                     </div>
+
                     <div class="custom-file">
-                        <input type="file" accept="image/*" class="custom-file-input" id="image-file" onchange="uploadImage()">
-                        <label class="custom-file-label" for="image-file" id="file-label"></label>
+                        <input type="file" accept="image/*" id="image-file" class="custom-file-input"
+                               onchange="changeImageFile()"/>
+                        <label for="image-file" id="custom-file-label" class="custom-file-label"></label>
                     </div>
                 </div>
 
@@ -429,10 +98,12 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">내용</span>
                     </div>
-                    <textarea class="form-control" style="height: 200px" id="content-box"></textarea>
+
+                    <textarea id="content-input" class="form-control popup-textarea"></textarea>
                 </div>
 
-                <button type="button" class="btn btn-secondary" style="margin-top: 1rem; float: right" onclick="writePost()">글쓰기</button>
+                <button type="button" class="btn btn-secondary popup-left-align-button" onclick="uploadPost()">글쓰기
+                </button>
             </div>
         </div>
     </div>
