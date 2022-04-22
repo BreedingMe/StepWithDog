@@ -1,0 +1,5 @@
+# Python Caches
+**/__pycache__/
+
+# PyCharm Caches
+.idea/
