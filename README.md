@@ -20,10 +20,10 @@ pip install -r requirements.txt
 ### 환경변수
 
 ``` bash
-export MONGODB_HOST=”<HOST NAME>” 
-export MONGODB_PORT=”<PORT NUMBER>” 
-export MONGODB_USER=”<MONGODB USER>” 
-export MONGODB_PASSWORD=”<MONGODB PASSWORD>”
+export MONGODB_HOST="<HOST NAME>" 
+export MONGODB_PORT="<PORT NUMBER>" 
+export MONGODB_USER="<MONGODB USER>" 
+export MONGODB_PASSWORD="<MONGODB PASSWORD>"
 ```
 
 ## 사용법
