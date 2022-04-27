@@ -234,6 +234,6 @@ function uploadPost() {
         },
         error: function () {
             alert('사진의 크기가 너무 큽니다!');
-        },
+        }
     });
 }
